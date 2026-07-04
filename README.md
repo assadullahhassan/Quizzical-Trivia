@@ -1,2 +1,1 @@
 # Quizzical Trivia
-
