@@ -2,6 +2,7 @@
   --text: #9ca3af;
   --text-h: #f3f4f6;
   --bg: #16171D;
+  --dark: #16171D;
   --white: #fff;
   --border: #2e303a;
   --accent: #aa3bff;
@@ -19,7 +20,7 @@
   --background: #FDFDFD;
   --success: #00B894;
   --error: #FF7675;
-  --selected:#A79EF2;
+  --selected:#5846E3;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;

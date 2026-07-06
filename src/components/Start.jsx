@@ -6,7 +6,7 @@ export default function Start({ handleStartQuiz }) {
     <section id="center">
       <img src={blob} alt="Blob" className="blob" />
         <img src={logo} alt="Quizzical Logo" className="logo" />
-      <p>Test your knowledge with this fun quiz!</p>
+      <p>Test your knowledge with the fun quizzes!</p>
       <button className="start-btn" onClick={handleStartQuiz}>
         Start Quiz
       </button>

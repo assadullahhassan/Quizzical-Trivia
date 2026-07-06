@@ -1,8 +1,85 @@
-import React from "react"
+import {useState, useEffect, Fragment} from "react"
+import {encode, decode} from 'html-entities';
 
 export default function Questions() {
-     const [score, setScore] = React.useState(0)
-     const [checked, setChecked] = React.useState(true)
+     const [score, setScore] = useState(0)
+     const [checked, setChecked] = useState(true)
+     const [questions, setQuestions] = useState([])
+
+     useEffect(() => {
+        console.log('Fetching questions from API... 1')
+        fetch('https://opentdb.com/api.php?amount=5&type=multiple')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data.results)
+                if (data.results) {
+                    const questions = data.results.map((question) => {
+                        const answersArr = [...question.incorrect_answers, question.correct_answer]
+                        const shuffledAnswers = shuffleArray(answersArr)
+                        return {
+                            question: question.question,
+                            correct_answer: question.correct_answer,
+                            incorrect_answers: shuffledAnswers,
+                            answers: shuffledAnswers,
+                            difficulty: question.difficulty
+                        }
+                    })
+
+                    console.log('Questions fetched:', questions)
+                    setQuestions(questions)
+                }
+            })
+            
+        const correctAnswers = ['Paris', 'Jupiter', 'Au']
+        const userAnswers = ['Berlin', 'Jupiter', 'Au']
+
+        // let newScore = 0
+        // for (let i = 0; i < correctAnswers.length; i++) {
+        //     if (correctAnswers[i] === userAnswers[i]) {
+        //         newScore++
+        //     }
+        // }
+        // setScore(newScore)
+    }, [1])
+
+    const questionsElements = questions.map((question, index) => (
+        <Fragment key={index}>
+        <div className="question" key={index}>
+            <h2>Question {index + 1}</h2>
+            <p>{decode(question.question)} <span className={`difficulty difficulty-${question.difficulty}`}> {question.difficulty} </span></p>
+            <ul>
+                {question.answers.map((answer, index) => (
+                    <li onClick={(e) => handleAnswers(e)} key={decode(answer)}>{decode(answer)}</li>
+                ))}
+            </ul>
+        </div>
+        <section id="spacer"></section>
+        </Fragment>
+    ))
+
+    function shuffleArray(array) {
+    const shuffled = [...array]; 
+    
+    for (let i = shuffled.length - 1; i > 0; i--) {
+       
+        const j = Math.floor(Math.random() * (i + 1));
+    
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled;
+    }
+
+    function handleAnswers(event) {
+        const selectedAnswer = event.target;
+        const allAnswers = selectedAnswer.parentElement.querySelectorAll('li');
+
+        allAnswers.forEach(answer => {
+            answer.classList.remove('answer-selected');
+        });
+        selectedAnswer.classList.add('answer-selected');
+
+    }
 
   return (
     <main>
@@ -13,46 +90,14 @@ export default function Questions() {
         <section id="spacer"></section>
 
         <section id="questions" className="questions-container">
-            <div className="question">
-                <h2>Question 1</h2>
-                <p>What is the capital of France?</p>
-                <ul>
-                    <li className="selected">Berlin</li>
-                    <li>Madrid</li>
-                    <li>Paris</li>
-                    <li>Rome</li>
-                </ul>
-            </div>
-            <section id="spacer"></section>
-            <div className="question">
-                <h2>Question 2</h2>
-                <p>What is the largest planet in our solar system?</p>
-                <ul>
-                    <li>Earth</li>
-                    <li>Jupiter</li>
-                    <li>Mars</li>
-                    <li>Saturn</li>
-                </ul>
-            </div>
-            <section id="spacer"></section>
-            <div className="question">
-                <h2>Question 3</h2>
-                <p>What is the chemical symbol for gold?</p>
-                <ul>
-                    <li>Au</li>
-                    <li>Ag</li>
-                    <li>Fe</li>
-                    <li>Hg</li>
-                </ul>
-            </div>
-           <section id="spacer"></section>
+            {questionsElements}
         </section>
       
       <section className="check-answers-container">
         <button className="check-btn">Check Answers</button>
         {checked && (
             <div>
-                <p className="score">You scored {score}/3 correct answers</p>
+                <p className="score">You scored {score}/5 correct answers</p>
             </div>
         )}
       </section>
