@@ -1,10 +1,17 @@
 import {useState, useEffect, Fragment} from "react"
 import {encode, decode} from 'html-entities';
+import { clsx } from "clsx"
 
 export default function Questions() {
      const [score, setScore] = useState(0)
-     const [checked, setChecked] = useState(true)
+     const [checked, setChecked] = useState(false)
      const [questions, setQuestions] = useState([])
+     const [areAllQuestionsAnswered, setAreAllQuestionsAnswered] = useState(false)
+
+
+
+    console.log('Are all questions answered?', areAllQuestionsAnswered);
+    
 
      useEffect(() => {
         console.log('Fetching questions from API... 1')
@@ -40,7 +47,7 @@ export default function Questions() {
         //     }
         // }
         // setScore(newScore)
-    }, [1])
+    }, [])
 
     const questionsElements = questions.map((question, index) => (
         <Fragment key={index}>
@@ -49,7 +56,12 @@ export default function Questions() {
             <p>{decode(question.question)} <span className={`difficulty difficulty-${question.difficulty}`}> {question.difficulty} </span></p>
             <ul>
                 {question.answers.map((answer, index) => (
-                    <li onClick={(e) => handleAnswers(e)} key={decode(answer)}>{decode(answer)}</li>
+                    
+                    <li  
+                    className={clsx({answer_success: checked && answer === question.correct_answer, answer_error: checked && answer !== question.correct_answer})}
+                    disabled={checked}
+                    onClick={(e) => handleAnswers(e)}
+                     key={decode(answer)}>{decode(answer)}</li>
                 ))}
             </ul>
         </div>
@@ -58,16 +70,16 @@ export default function Questions() {
     ))
 
     function shuffleArray(array) {
-    const shuffled = [...array]; 
-    
-    for (let i = shuffled.length - 1; i > 0; i--) {
-       
-        const j = Math.floor(Math.random() * (i + 1));
-    
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    
-    return shuffled;
+        const shuffled = [...array]; 
+        
+        for (let i = shuffled.length - 1; i > 0; i--) {
+        
+            const j = Math.floor(Math.random() * (i + 1));
+        
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        
+        return shuffled;
     }
 
     function handleAnswers(event) {
@@ -79,6 +91,27 @@ export default function Questions() {
         });
         selectedAnswer.classList.add('answer-selected');
 
+
+        setAreAllQuestionsAnswered(Array.from(document.querySelectorAll('.question')).every(question => {
+            return question.querySelector('.answer-selected') !== null;
+        }));
+        console.log('Are all questions answered?', areAllQuestionsAnswered);
+    }
+
+    function handleCheckAnswers() {
+        const allQuestions = document.querySelectorAll('.question');
+        let newScore = 0;
+
+        allQuestions.forEach((question, index) => {
+            const selectedAnswer = question.querySelector('.answer-selected');
+            const correctAnswer = questions[index].correct_answer;
+
+            if (selectedAnswer && selectedAnswer.textContent === correctAnswer) {
+                newScore++;
+            }
+        });
+        setChecked(true);
+        setScore(newScore);
     }
 
   return (
@@ -94,7 +127,7 @@ export default function Questions() {
         </section>
       
       <section className="check-answers-container">
-        <button className="check-btn">Check Answers</button>
+        <button onClick={handleCheckAnswers} disabled={!areAllQuestionsAnswered} className="check-btn">Check Answers</button>
         {checked && (
             <div>
                 <p className="score">You scored {score}/5 correct answers</p>

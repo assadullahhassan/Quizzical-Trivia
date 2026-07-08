@@ -135,6 +135,16 @@ Text/Icons: Dark Slate (#2D3436) */
   }
 }
 
+.question li:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.question li:disabled:hover {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .question li:hover {
   background-color: #2D2F39;
   color: var(--white);
@@ -174,13 +184,13 @@ Text/Icons: Dark Slate (#2D3436) */
   font-weight: 700;
 }
 
-.answer-success {
+.answer_success {
   background-color: var(--success);
   color: var(--dark);
   font-weight: 700;
 }
 
-.answer-error {
+.answer_error {
   background-color: var(--error);
   color: var(--dark);
   font-weight: 700;
@@ -199,7 +209,7 @@ Text/Icons: Dark Slate (#2D3436) */
   }
 }
 
-.check-btn {
+button.check-btn {
   background-color: var(--primary);
   color: var(--white);
   font-family: inherit;
@@ -217,6 +227,12 @@ Text/Icons: Dark Slate (#2D3436) */
     border-radius: 6px;
     margin-top: 16px;
   }
+}
+
+button.check-btn:disabled {
+  background-color: var(--border);
+  color: var(--text);
+  cursor: not-allowed;
 }
 
 #spacer {
