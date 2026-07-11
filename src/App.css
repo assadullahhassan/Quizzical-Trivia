@@ -125,7 +125,7 @@ Text/Icons: Dark Slate (#2D3436) */
   cursor: pointer;
   font-family: inherit;
   font-size: 1rem;
-  color: var(--text);
+  /* color: var(--text); */
   transition: all 0.2s ease-in-out;
 
   @media (max-width: 1024px) {
@@ -188,12 +188,14 @@ Text/Icons: Dark Slate (#2D3436) */
   background-color: var(--success);
   color: var(--dark);
   font-weight: 700;
+  opacity: 0.8;
 }
 
 .answer_error {
   background-color: var(--error);
   color: var(--dark);
   font-weight: 700;
+  opacity: 0.8;
 }
 
 .check-answers-container {
@@ -233,6 +235,26 @@ button.check-btn:disabled {
   background-color: var(--border);
   color: var(--text);
   cursor: not-allowed;
+}
+
+button.startOver {
+  background-color: var(--secondary);
+  color: var(--dark);
+  font-family: inherit;
+  font-size: 1.125rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  
+
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 6px;
+    margin-top: 16px;
+  }
 }
 
 #spacer {

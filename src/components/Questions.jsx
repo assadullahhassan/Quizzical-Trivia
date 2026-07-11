@@ -1,4 +1,4 @@
-import {useState, useEffect, Fragment} from "react"
+import {useState, useEffect, Fragment, useRef} from "react"
 import {encode, decode} from 'html-entities';
 import { clsx } from "clsx"
 
@@ -7,14 +7,22 @@ export default function Questions() {
      const [checked, setChecked] = useState(false)
      const [questions, setQuestions] = useState([])
      const [areAllQuestionsAnswered, setAreAllQuestionsAnswered] = useState(false)
-
+     const [count, setCount] = useState(1)
 
 
     console.log('Are all questions answered?', areAllQuestionsAnswered);
-    
+
+    const hasRenderedOnce = useRef(false);
 
      useEffect(() => {
-        console.log('Fetching questions from API... 1')
+
+        if (hasRenderedOnce.current) {
+            
+            return;
+        }
+        hasRenderedOnce.current = true;
+        console.log(`Fetching questions from API...${count} `)
+        console.log('Count value:', count)
         fetch('https://opentdb.com/api.php?amount=5&type=multiple')
             .then(response => response.json())
             .then(data => {
@@ -37,17 +45,8 @@ export default function Questions() {
                 }
             })
             
-        const correctAnswers = ['Paris', 'Jupiter', 'Au']
-        const userAnswers = ['Berlin', 'Jupiter', 'Au']
-
-        // let newScore = 0
-        // for (let i = 0; i < correctAnswers.length; i++) {
-        //     if (correctAnswers[i] === userAnswers[i]) {
-        //         newScore++
-        //     }
-        // }
-        // setScore(newScore)
-    }, [])
+            
+    }, [count])
 
     const questionsElements = questions.map((question, index) => (
         <Fragment key={index}>
@@ -58,8 +57,9 @@ export default function Questions() {
                 {question.answers.map((answer, index) => (
                     
                     <li  
-                    className={clsx({answer_success: checked && answer === question.correct_answer, answer_error: checked && answer !== question.correct_answer})}
-                    disabled={checked}
+                    className={clsx({answer_success: checked && answer === question.correct_answer, answer_error: checked && answer === question.selected_answer && answer !== question.correct_answer})}
+                    
+                    aria-disabled="true"
                     onClick={(e) => handleAnswers(e)}
                      key={decode(answer)}>{decode(answer)}</li>
                 ))}
@@ -91,6 +91,16 @@ export default function Questions() {
         });
         selectedAnswer.classList.add('answer-selected');
 
+        console.log('Selected answer:', selectedAnswer.textContent);
+
+        setQuestions(prevQuestions => {
+            const updatedQuestions = [...prevQuestions];
+            const questionIndex = Array.from(document.querySelectorAll('.question')).indexOf(selectedAnswer.closest('.question'));
+            updatedQuestions[questionIndex].selected_answer = selectedAnswer.textContent;
+            return updatedQuestions;
+        });
+
+        console.log('Updated questions:', questions);
 
         setAreAllQuestionsAnswered(Array.from(document.querySelectorAll('.question')).every(question => {
             return question.querySelector('.answer-selected') !== null;
@@ -114,6 +124,15 @@ export default function Questions() {
         setScore(newScore);
     }
 
+    function startOver() {
+        // setScore(0)
+        // setChecked(false)
+        // setQuestions([])
+        // setAreAllQuestionsAnswered(false)
+        // hasRenderedOnce.current = false;
+        // setCount(prevCount => prevCount++)
+    }
+
   return (
     <main>
         <section className="questions-header">
@@ -127,7 +146,9 @@ export default function Questions() {
         </section>
       
       <section className="check-answers-container">
-        <button onClick={handleCheckAnswers} disabled={!areAllQuestionsAnswered} className="check-btn">Check Answers</button>
+        {!checked && <button onClick={handleCheckAnswers} disabled={!areAllQuestionsAnswered} className="check-btn">Check Answers</button>}
+    
+       {checked && <button onClick={startOver} className="startOver"> Next questions</button>}
         {checked && (
             <div>
                 <p className="score">You scored {score}/5 correct answers</p>
