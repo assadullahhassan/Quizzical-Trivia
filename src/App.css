@@ -1,16 +1,3 @@
-/* Palette */
-
-/* Primary Brand: Electric Purple (#6C5CE7)
-
-Secondary/Accent: Mango Yellow (#FDCB6E)
-
-Background: Off-White (#FDFDFD)
-
-Success (Correct): Mint Green (#00B894)
-
-Error (Incorrect): Coral Red (#FF7675)
-
-Text/Icons: Dark Slate (#2D3436) */
 
 
 .logo {
@@ -135,17 +122,7 @@ Text/Icons: Dark Slate (#2D3436) */
   }
 }
 
-.question li:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.question li:disabled:hover {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.question li:hover {
+.question li:not(.answer-selected):hover {
   background-color: #2D2F39;
   color: var(--white);
   border-color: #2D2F39;
@@ -154,7 +131,7 @@ Text/Icons: Dark Slate (#2D3436) */
 .question .difficulty{
   padding: 4px 8px;
   border-radius: 4px;
-  font-size: 0.55rem;
+  font-size: 0.65rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -281,6 +258,14 @@ button.startOver {
   display: none;
 }
 
+footer {
+  display: flex;
+  justify-content:space-between;
+  padding-bottom: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  font-size: 1rem;
+}
 
 
 @keyframes spin {

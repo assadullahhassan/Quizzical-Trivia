@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import Start from './components/Start'
 import Questions from './components/Questions'
+import Footer from './components/Footer'
+
 import './App.css'
 
 function App() {
@@ -14,6 +16,7 @@ function handleStartQuiz() {
     <>
       {quizStarted ? <Questions /> : <Start handleStartQuiz={handleStartQuiz} />}
       <section id="spacer"></section>
+      {!quizStarted && <Footer />}
     </>
   )
 }
