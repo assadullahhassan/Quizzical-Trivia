@@ -265,6 +265,22 @@ button.startOver {
   }
 }
 
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px; 
+}
+
+.loader svg {
+  width: 70px; 
+  height: 70px; 
+}
+
+.hidden {
+  display: none;
+}
+
 
 
 @keyframes spin {
