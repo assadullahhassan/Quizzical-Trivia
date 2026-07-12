@@ -19,9 +19,12 @@ export default function Questions() {
             return;
         }
         hasRenderedOnce.current = true;
+        console.log(`Fetching questions from API...${count} `)
+        console.log('Count value:', count)
         fetch('https://opentdb.com/api.php?amount=5&type=multiple')
             .then(response => response.json())
             .then(data => {
+                console.log(data.results)
                 if (data.results) {
                     const questions = data.results.map((question) => {
                         const answersArr = [...question.incorrect_answers, question.correct_answer]
@@ -35,6 +38,7 @@ export default function Questions() {
                         }
                     })
 
+                    console.log('Questions fetched:', questions)
                     setQuestions(questions)
                 }
             })
@@ -85,6 +89,7 @@ export default function Questions() {
         });
         selectedAnswer.classList.add('answer-selected');
 
+        console.log('Selected answer:', selectedAnswer.textContent);
 
         setQuestions(prevQuestions => {
             const updatedQuestions = [...prevQuestions];
@@ -93,10 +98,12 @@ export default function Questions() {
             return updatedQuestions;
         });
 
+        console.log('Updated questions:', questions);
 
         setAreAllQuestionsAnswered(Array.from(document.querySelectorAll('.question')).every(question => {
             return question.querySelector('.answer-selected') !== null;
         }));
+        console.log('Are all questions answered?', areAllQuestionsAnswered);
     }
 
     function handleCheckAnswers() {
@@ -122,6 +129,7 @@ export default function Questions() {
         setAreAllQuestionsAnswered(false)
         hasRenderedOnce.current = false;
         setCount(prevCount => prevCount + 1)
+        console.log('count val',count)
     }
 
   return (
