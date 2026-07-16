@@ -122,7 +122,13 @@
   }
 }
 
-.question li:not(.answer-selected):hover {
+.disable {
+  background-color: var(--border);
+  color: var(--text);
+  cursor: not-allowed;
+}
+
+.question li:not(.answer-selected, .answer_success, .answer_error, .disable):hover {
   background-color: #2D2F39;
   color: var(--white);
   border-color: #2D2F39;

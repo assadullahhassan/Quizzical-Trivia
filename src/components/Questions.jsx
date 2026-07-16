@@ -51,7 +51,7 @@ export default function Questions() {
                 {question.answers.map((answer, index) => (
                     
                     <li  
-                    className={clsx({answer_success: checked && answer === question.correct_answer, answer_error: checked && answer === question.selected_answer && answer !== question.correct_answer})}
+                    className={clsx({disable: checked, answer_success: checked && answer === question.correct_answer, answer_error: checked && answer === question.selected_answer && answer !== question.correct_answer})}
                     
                     aria-disabled="true"
                     onClick={(e) => handleAnswers(e)}
@@ -80,7 +80,8 @@ export default function Questions() {
         const selectedAnswer = event.target;
         const allAnswers = selectedAnswer.parentElement.querySelectorAll('li');
 
-        allAnswers.forEach(answer => {
+        if(!checked) {
+            allAnswers.forEach(answer => {
             answer.classList.remove('answer-selected');
         });
         selectedAnswer.classList.add('answer-selected');
@@ -97,6 +98,7 @@ export default function Questions() {
         setAreAllQuestionsAnswered(Array.from(document.querySelectorAll('.question')).every(question => {
             return question.querySelector('.answer-selected') !== null;
         }));
+        }
     }
 
     function handleCheckAnswers() {
